@@ -9,7 +9,9 @@ TOPLEVEL_LANG ?= verilog
 ifneq ($(GATES),yes)
 
 # this is the only part you should need to modify:
-VERILOG_SOURCES += $(PWD)/tb.v $(PWD)/tt_um_seven_segment_seconds.v $(PWD)/decoder.v
+VERILOG_SOURCES += $(PWD)/tb.v $(PWD)/tt_um_mayrmichael_wave_generator.v $(PWD)/cordic_slice.v $(PWD)/cordic_iterative.v $(PWD)/cordic_convergence.v $(PWD)/sin_generator.v
+VERILOG_SOURCES += $(PWD)/counter.v $(PWD)/square_puls_generator.v $(PWD)/strobe_generator.v $(PWD)/top_triangle_generator.v $(PWD)/triangle_generator.v
+VERILOG_SOURCES += $(PWD)/spi_master_only_tx.v $(PWD)/spi_master_only_tx_single_cs.v $(PWD)/wave_generator.v
 
 else
 
