@@ -35,16 +35,16 @@ module sin_generator #(
 
     reg phase_increment_done_strobe, next_phase_increment_done_strobe;
 
-    wire [N_FRAC:0] y_con_out, x_con_out, z_con_out;
+    wire signed [N_FRAC:0] y_con_out, x_con_out, z_con_out;
     wire data_con_out_valid_strobe;
 
-    wire [N_FRAC:0] y_cordic_out;
+    wire signed [N_FRAC:0] y_cordic_out;
     /* verilator lint_off UNUSEDSIGNAL */
-    wire [N_FRAC:0] x_cordic_out, z_cordic_out;
+    wire signed [N_FRAC:0] x_cordic_out, z_cordic_out;
     /* verilator lint_on UNUSEDSIGNAL */
     wire data_cordic_out_valid_strobe;
 
-    wire [N_FRAC:0] y_const;
+    wire signed [N_FRAC:0] y_const;
     assign y_const = 0;
 
     always @(posedge clk_i) begin

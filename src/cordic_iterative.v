@@ -41,7 +41,7 @@ module cordic_iterative #(
     assign SHIFT_VECTOR[3] = 3'b011;
     assign SHIFT_VECTOR[4] = 3'b100;
     assign SHIFT_VECTOR[5] = 3'b101;
-    wire [7:0] ANGLES_VECTOR [0:5];
+    wire signed [7:0] ANGLES_VECTOR [0:5];
     assign ANGLES_VECTOR[0] = 8'b00100000;
     assign ANGLES_VECTOR[1] = 8'b00010010;
     assign ANGLES_VECTOR[2] = 8'b00001001;
@@ -66,7 +66,7 @@ module cordic_iterative #(
     localparam BW_COUNTER = $clog2(ITERATIONS);
     reg [BW_COUNTER-1 : 0] next_counter_value, counter_value;
 
-    wire [N_FRAC:0] current_rotation_angle;
+    wire signed [N_FRAC:0] current_rotation_angle;
     wire [BW_SHIFT_VECTOR-1:0] shift_value;
 
     reg signed [N_FRAC:0] x_mux, y_mux, z_mux;
