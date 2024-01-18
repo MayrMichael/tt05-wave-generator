@@ -35,8 +35,8 @@ module sin_generator #(
 
     reg phase_increment_done_strobe, next_phase_increment_done_strobe;
 
-    // wire signed [N_FRAC:0] y_con_out, x_con_out, z_con_out;
-    // wire data_con_out_valid_strobe;
+    wire signed [N_FRAC:0] y_con_out, x_con_out, z_con_out;
+    wire data_con_out_valid_strobe;
 
     //wire signed [N_FRAC:0] y_cordic_out;
     /* verilator lint_off UNUSEDSIGNAL */
@@ -68,18 +68,18 @@ module sin_generator #(
         end
     end
 
-    // cordic_convergence cordic_convergence_inst
-    // (.clk_i(clk_i),
-    //  .rst_i(rst_i),
-    //  .x_i(amplitude_i),
-    //  .y_i(y_const),
-    //  .z_i(z_phase),
-    //  .data_in_valid_strobe_i(phase_increment_done_strobe),
-    //  .x_o(x_con_out),
-    //  .y_o(y_con_out),
-    //  .z_o(z_con_out),
-    //  .data_out_valid_strobe_o(data_con_out_valid_strobe)
-    //  );
+    cordic_convergence cordic_convergence_inst
+    (.clk_i(clk_i),
+     .rst_i(rst_i),
+     .x_i(amplitude_i),
+     .y_i(y_const),
+     .z_i(z_phase),
+     .data_in_valid_strobe_i(phase_increment_done_strobe),
+     .x_o(x_con_out),
+     .y_o(y_con_out),
+     .z_o(z_con_out),
+     .data_out_valid_strobe_o(data_con_out_valid_strobe)
+     );
 
     // cordic_iterative cordic_iterative_inst
     // (.clk_i(clk_i),
@@ -94,14 +94,12 @@ module sin_generator #(
     //  .data_out_valid_strobe_o(data_cordic_out_valid_strobe)
     //  );
 
-    // assign data_o = y_cordic_out;
+    // assign data_o = z_cordic_out;
     // assign data_out_valid_strobe_o = data_cordic_out_valid_strobe;
 
-    // assign data_o = z_con_out;
-    // assign data_out_valid_strobe_o = data_con_out_valid_strobe;  
+    assign data_o = z_con_out;
+    assign data_out_valid_strobe_o = data_con_out_valid_strobe;  
 
-    assign data_o = z_phase;
-    assign data_out_valid_strobe_o = phase_increment_done_strobe;
 endmodule
 
 `endif
