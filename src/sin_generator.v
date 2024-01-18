@@ -100,7 +100,7 @@ module sin_generator #(
     // assign data_o = z_con_out;
     // assign data_out_valid_strobe_o = data_con_out_valid_strobe;  
 
-    assign data_o = y_const;
+    assign data_o = z_phase;
     assign data_out_valid_strobe_o = phase_increment_done_strobe;
 endmodule
 
