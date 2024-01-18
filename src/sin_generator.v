@@ -38,11 +38,11 @@ module sin_generator #(
     wire signed [N_FRAC:0] y_con_out, x_con_out, z_con_out;
     wire data_con_out_valid_strobe;
 
-    //wire signed [N_FRAC:0] y_cordic_out;
+    wire signed [N_FRAC:0] y_cordic_out;
     /* verilator lint_off UNUSEDSIGNAL */
-    //wire signed [N_FRAC:0] x_cordic_out, z_cordic_out;
+    wire signed [N_FRAC:0] x_cordic_out, z_cordic_out;
     /* verilator lint_on UNUSEDSIGNAL */
-    //wire data_cordic_out_valid_strobe;
+    wire data_cordic_out_valid_strobe;
 
     wire signed [N_FRAC:0] y_const;
     assign y_const = 0;
@@ -81,24 +81,24 @@ module sin_generator #(
      .data_out_valid_strobe_o(data_con_out_valid_strobe)
      );
 
-    // cordic_iterative cordic_iterative_inst
-    // (.clk_i(clk_i),
-    //  .rst_i(rst_i),
-    //  .x_i(x_con_out),
-    //  .y_i(y_con_out),
-    //  .z_i(z_con_out),
-    //  .data_in_valid_strobe_i(data_con_out_valid_strobe),
-    //  .x_o(x_cordic_out),
-    //  .y_o(y_cordic_out),
-    //  .z_o(z_cordic_out),
-    //  .data_out_valid_strobe_o(data_cordic_out_valid_strobe)
-    //  );
+    cordic_iterative cordic_iterative_inst
+    (.clk_i(clk_i),
+     .rst_i(rst_i),
+     .x_i(x_con_out),
+     .y_i(y_con_out),
+     .z_i(z_con_out),
+     .data_in_valid_strobe_i(data_con_out_valid_strobe),
+     .x_o(x_cordic_out),
+     .y_o(y_cordic_out),
+     .z_o(z_cordic_out),
+     .data_out_valid_strobe_o(data_cordic_out_valid_strobe)
+     );
 
-    // assign data_o = z_cordic_out;
-    // assign data_out_valid_strobe_o = data_cordic_out_valid_strobe;
+    assign data_o = y_cordic_out;
+    assign data_out_valid_strobe_o = data_cordic_out_valid_strobe;
 
-    assign data_o = z_con_out;
-    assign data_out_valid_strobe_o = data_con_out_valid_strobe;  
+    // assign data_o = z_con_out;
+    // assign data_out_valid_strobe_o = data_con_out_valid_strobe;  
 
 endmodule
 
