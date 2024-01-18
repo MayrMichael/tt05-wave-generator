@@ -94,7 +94,7 @@ module sin_generator #(
      .data_out_valid_strobe_o(data_cordic_out_valid_strobe)
      );
 
-     assign data_o = y_cordic_out;
+     assign data_o = x_cordic_out;
      assign data_out_valid_strobe_o = data_cordic_out_valid_strobe;
     
 endmodule
