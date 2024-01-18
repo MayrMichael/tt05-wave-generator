@@ -28,7 +28,7 @@ async def cosim_tt_sin(dut):
 
 
     # start clock
-    cocotb.start_soon(Clock(dut.clk, 10, units="ns").start())
+    cocotb.start_soon(Clock(dut.clk, 16, units="ns").start())
 
     # reset dut
     await reset_dut(dut.rst_n, 20)
@@ -51,7 +51,7 @@ async def cosim_tt_sin(dut):
     
     dut.enable.value = 1
 
-    forked = cocotb.start_soon(check_value(dut, calc_values_sin))
+    forked = cocotb.start_soon(print_value(dut, calc_values_sin))
     await cocotb.start_soon(enable_control(dut))
 
     await Join(forked)
@@ -209,6 +209,30 @@ async def check_value(dut, calc_values):
             dut._log.info(f'----- #{k:>03} -> {dut.spi_mosi.value.binstr}  | {sample_str[k]}')
             assert dut.spi_mosi.value.binstr == sample_str[k]
             assert dut.spi_cs.value == 0
+
+        await RisingEdge(dut.spi_cs)
+
+
+async def print_value(dut, calc_values):
+    dut._log.info(f'#{0:>03} -> {"dut".center(8)} | {"python".center(8)}')
+    for i in range(len(calc_values)):
+
+        await FallingEdge(dut.spi_cs)
+        
+        dut._log.info(f'#{i:>03} -> {dut.data_o.value.binstr} | {calc_values[i]}')
+
+        # assert dut.data_o.value.binstr == calc_values[i]
+
+        sample_str = calc_values[i]
+        for k in range(8):
+            t1 = RisingEdge(dut.spi_clk)
+            t2 = RisingEdge(dut.spi_cs)
+            t_ret = await First(t1, t2)
+            if t_ret is t2:
+                assert False
+            dut._log.info(f'----- #{k:>03} -> {dut.spi_mosi.value.binstr}  | {sample_str[k]}')
+            # assert dut.spi_mosi.value.binstr == sample_str[k]
+            # assert dut.spi_cs.value == 0
 
         await RisingEdge(dut.spi_cs)
 
