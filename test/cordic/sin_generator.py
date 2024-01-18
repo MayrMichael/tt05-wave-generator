@@ -3,7 +3,7 @@ import cordic
 
 def sin_gen(sfixed_fract, phase, iterations, n_samples):
 
-    calc_values, xc_values, yc_values, zc_values = sin_gen_debug(sfixed_fract, phase, iterations, n_samples)
+    calc_values, xc_values, yc_values, zc_values, xi_values, yi_values, zi_values = sin_gen_debug(sfixed_fract, phase, iterations, n_samples)
 
     return calc_values
 

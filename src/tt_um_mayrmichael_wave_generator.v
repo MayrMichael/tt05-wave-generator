@@ -14,6 +14,9 @@
 
 `default_nettype none
 
+`ifndef __TT_UM_MAYRMICHAEL_WAVE_GENERATOR
+`define __TT_UM_MAYRMICHAEL_WAVE_GENERATOR
+
 `include "wave_generator.v"
 `include "spi_master_only_tx_single_cs.v"
 
@@ -86,3 +89,6 @@ module tt_um_mayrmichael_wave_generator (
     );
 
 endmodule
+
+`endif
+`default_nettype wire

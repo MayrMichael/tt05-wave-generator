@@ -6,6 +6,8 @@ this testbench just instantiates the module and makes some convenient wires
 that can be driven / tested by the cocotb test.py
 */
 
+`include "tt_um_mayrmichael_wave_generator.v"
+
 // testbench is controlled by test.py
 module tb ();
 
@@ -23,12 +25,31 @@ module tb ();
     reg  [7:0] ui_in;
     reg  [7:0] uio_in;
 
-    wire [6:0] segments = uo_out[6:0];
     wire [7:0] uo_out;
     wire [7:0] uio_out;
     wire [7:0] uio_oe;
 
-    tt_um_mayrmichael_wave_generator tt_um_mayrmichael_wave_generator (
+    wire spi_clk, spi_mosi, spi_cs;
+    wire [7:0] data_i, data_o;
+
+    wire [1:0] waveform;
+    wire enable, set_phase, set_amplitude;
+    wire [2:0] not_used = 0;
+
+
+    assign spi_clk  = uio_out[7];
+    assign spi_mosi = uio_out[6];
+    assign spi_cs   = uio_out[5];
+    assign data_o     = uo_out;
+
+    assign uio_in[0]    = enable;
+    assign uio_in[2:1]  = waveform;
+    assign uio_in[3]    = set_phase;
+    assign uio_in[4]    = set_amplitude;
+    assign uio_in[7:5]  = not_used;
+    assign ui_in        = data_i;
+
+    tt_um_mayrmichael_wave_generator tt_um_mayrmichael_wave_generator_inst (
     // include power ports for the Gate Level test
     `ifdef GL_TEST
         .VPWR( 1'b1),

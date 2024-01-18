@@ -1,6 +1,6 @@
 import cocotb
 from bitstring import BitArray
-from cocotb.triggers import Timer, FallingEdge, ClockCycles, RisingEdge
+from cocotb.triggers import Timer, FallingEdge, ClockCycles, RisingEdge, Join, First
 from cocotb.binary import BinaryValue, BinaryRepresentation 
 from cocotb.clock import Clock
 
@@ -35,6 +35,26 @@ async def test_spi_master(dut):
         dut.data_i.value = unsigned2bin(n, 8)
         await ClockCycles(dut.clk_i, 1)
         dut.data_in_valid_strobe_i.value = 0
-        await ClockCycles(dut.clk_i, 40)
+        await FallingEdge(dut.spi_cs_o)
+        forked = cocotb.start_soon(check_value(dut, n))
+
+        await Join(forked)
+        await RisingEdge(dut.spi_cs_o)
+        await ClockCycles(dut.clk_i, 8)
+
+        
     
     dut._log.info('Test finished')
+
+
+async def check_value(dut, sample):
+    sample_str = unsigned2bin(sample, 8)
+    for i in range(8):
+        t1 = RisingEdge(dut.spi_clk_o)
+        t2 = RisingEdge(dut.spi_cs_o)
+        t_ret = await First(t1, t2)
+        if t_ret is t2:
+            assert False
+        assert dut.spi_mosi_o == sample_str[i]
+        assert dut.spi_cs_o == 0
+

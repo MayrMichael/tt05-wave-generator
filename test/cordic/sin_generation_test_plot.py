@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     sfixed_fract = 7
-    phase = 0.308807373046875
+    # phase = 0.308807373046875
+    phase = 0.01
     iterations = 6
     n_samples = 1000
 
