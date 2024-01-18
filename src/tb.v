@@ -6,7 +6,7 @@ this testbench just instantiates the module and makes some convenient wires
 that can be driven / tested by the cocotb test.py
 */
 
-`include "tt_um_mayrmichael_wave_generator.v"
+//`include "tt_um_mayrmichael_wave_generator.v"
 
 // testbench is controlled by test.py
 module tb ();
