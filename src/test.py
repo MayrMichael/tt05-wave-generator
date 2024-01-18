@@ -63,7 +63,7 @@ async def cosim_tt_sin(dut):
     
     dut.enable.value = 1
 
-    forked = cocotb.start_soon(print_test_value(dut, calc_values_xi))
+    forked = cocotb.start_soon(print_test_value(dut, calc_values_yi))
     # await cocotb.start_soon(enable_control(dut))
 
     await Join(forked)
