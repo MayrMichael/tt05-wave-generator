@@ -40,7 +40,6 @@ module square_puls_generator #(
 
     // register variables next_ defines the input for the register and without next_ the actual value is defined
     reg signed [N_FRAC:0] data, next_data;
-    reg signed [N_FRAC:0] data, next_data;
     reg data_out_valid_strobe, next_data_out_valid_strobe;
 
     // registers
