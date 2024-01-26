@@ -69,7 +69,7 @@ module wave_generator #(
      .rst_i(rst_i),
      .phase_i(phase),
      .amplitude_i(amplitude),
-     .next_data_strobe_i(strobe),
+     .get_next_data_strobe_i(strobe),
      .data_o(data_sin),
      .data_out_valid_strobe_o(data_sin_out_valid_strobe)
     );
@@ -80,7 +80,7 @@ module wave_generator #(
      .phase_i(phase),
      .amplitude_i(amplitude),
      .overflow_mode_i(overflow_mode),					
-     .next_data_strobe_i(strobe), 						
+     .get_next_data_strobe_i(strobe), 						
      .data_sawtooth_o(data_sawtooth),						
      .data_sawtooth_out_valid_strobe_o(data_sawtooth_out_valid_strobe),
      .data_triangle_o(data_triangle),						

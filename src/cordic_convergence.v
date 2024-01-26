@@ -13,31 +13,41 @@
 /// limitations under the License.
 
 `default_nettype none
+
 `ifndef __CORDIC_CONVERGENCE
 `define __CORDIC_CONVERGENCE
 
+/*
+This module check the convergence criteria. This is needed because the operating range (region of convergence) of the 
+CORDIC algorithm is at about -100°…100°.
+*/
 module cordic_convergence #(
-    parameter N_FRAC = 7
+    parameter N_FRAC = 7 // fractional part of the Q notation (Q0.{N_FRAC}) that is used
 ) (
-    input clk_i,
-    input rst_i,
-    input signed [N_FRAC:0] x_i,						
-    input signed [N_FRAC:0] y_i,						
-    input signed [N_FRAC:0] z_i,
-    input data_in_valid_strobe_i, 						
-    output reg signed [N_FRAC:0] x_o,						
-    output reg signed [N_FRAC:0] y_o,						
-    output reg signed [N_FRAC:0] z_o,
-    output reg data_out_valid_strobe_o	
+    // inputs
+    input clk_i, // clock of the system
+    input rst_i, // reset (active low) of the system
+    input signed [N_FRAC:0] x_i, // input for x							
+    input signed [N_FRAC:0] y_i, // input for y						
+    input signed [N_FRAC:0] z_i, // input for z
+    input data_in_valid_strobe_i, // strobe that is true if the values x_i, y_i and z_i are ready for the algorithm
+
+    // outputs
+    output reg signed [N_FRAC:0] x_o, // output for x						
+    output reg signed [N_FRAC:0] y_o, // output for y							
+    output reg signed [N_FRAC:0] z_o, // output for z
+    output reg data_out_valid_strobe_o // strobe that is true if the calaulation is performed and the values are ready to deliver.
 );
+    // the boarders of the region on convergence ( +90° and -90°) 
     localparam signed HALF = 8'sb01000000;
     localparam signed MINUS_HALF = 8'sb11000000;
 
-    wire next_data_out_valid_strobe;
+    // register variables for the input of the register
     reg signed [N_FRAC:0] next_x;
     reg signed [N_FRAC:0] next_y;
     reg signed [N_FRAC:0] next_z;
 
+    // registers
     always @(posedge clk_i) begin
         if (rst_i == 1'b0) begin
             x_o <= 0;
@@ -48,17 +58,16 @@ module cordic_convergence #(
             x_o <= next_x;
             y_o <= next_y;
             z_o <= next_z;
-            data_out_valid_strobe_o <= next_data_out_valid_strobe;          
+            data_out_valid_strobe_o <= data_in_valid_strobe_i;          
         end
     end
 
-    assign next_data_out_valid_strobe = data_in_valid_strobe_i;
-
+    // combinational logic
     always @* begin
+        // default assignments
         next_x = x_i;
         next_y = y_i;
         next_z = z_i;
-
 
         if (z_i > HALF) begin
             // is rotation greater than 0.5 pi? yes: rotate by hand 90° and subtract from z

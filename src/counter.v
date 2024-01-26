@@ -17,22 +17,29 @@
 `ifndef __COUNTER
 `define __COUNTER
 
+/*
+This module implements a counter. This counter can run in an overflow mode or it is limited. This means that it counts from -amplidude to +amplidude.
+*/
 module counter #(
-    parameter N_FRAC = 7
+    parameter N_FRAC = 7 // fractional part of the Q notation (Q0.{N_FRAC}) that is used
 ) (
-    input clk_i,
-    input rst_i,
-    input signed [N_FRAC:0] amplitude_i,
-    input signed [N_FRAC:0] addend_i,
-    input overflow_mode_i, 				
-    input next_data_strobe_i,					
-    output wire signed [N_FRAC:0] data_o,						
-    output wire data_out_valid_strobe_o
+    // inputs
+    input clk_i, // clock of the system
+    input rst_i, // reset (active low) of the system
+    input signed [N_FRAC:0] amplitude_i, // amplidude for the limited mode
+    input signed [N_FRAC:0] addend_i, // value that is added per requested value
+    input overflow_mode_i, // defines the mode of the counter (1 overflow mode and 0 limited mode)				
+    input get_next_data_strobe_i, // strobe to request the next value from the counter					
+    
+    // outputs
+    output wire signed [N_FRAC:0] data_o, // current value of the counter						
+    output wire data_out_valid_strobe_o // strobe to identifiy a new value on the output 
 );
-
+     // register variables next_ defines the input for the register and without next_ the actual value is defined
     reg signed [N_FRAC:0] counter_value, next_counter_value;
     reg data_out_valid_strobe, next_data_out_valid_strobe;
 
+    // registers
     always @(posedge clk_i) begin
         if (rst_i == 1'b0) begin
             counter_value <= 0;
@@ -43,20 +50,27 @@ module counter #(
         end
     end 
 
+    // combinational logic
     always @* begin
+        // default assignment
         next_data_out_valid_strobe = 0;
         next_counter_value = counter_value;
         
-        if (next_data_strobe_i == 1'b1) begin
+        if (get_next_data_strobe_i == 1'b1) begin
+            // new value is reuested
             next_data_out_valid_strobe = 1;
             if ((overflow_mode_i == 1'b1) || (counter_value <= amplitude_i)) begin
+                // in the overflow mode the counter will overflow
+                // in the limited mode the counter will only add if the current value is smaller than the given amplidude
                 next_counter_value = counter_value + addend_i;
             end else begin
+                // negate the current value for the limited mode
                 next_counter_value = -counter_value;
             end
         end
     end
 
+    // assign the register outputs to the outputs of the module
     assign data_o = counter_value;
     assign data_out_valid_strobe_o = data_out_valid_strobe;
 
